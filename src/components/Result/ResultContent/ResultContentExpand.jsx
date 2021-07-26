@@ -8,9 +8,9 @@ import { API_LINK } from '../../../api/link';
 export const ResultContentExpand = ({ title, content, isExpand = false }) => {
 
   const style = useStyles();
-  const [article, setArticle] = useState(null);
-
-  const { full_text, title } = await(await getArticleText(articleLink.trim())).data.article
+  /*  const [article, setArticle] = useState(null);
+ 
+   const { full_text, title } = await(await getArticleText(articleLink.trim())).data.article */
 
 
 

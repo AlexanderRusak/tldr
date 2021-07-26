@@ -27,9 +27,9 @@ export const InputItem = ({ title, onClick, onKeyTerms, onShortSummary, onLongSu
   const summarizeHandler = async () => {
     if (is.url(value)) {
       resetSummarizeHandler();
-      /*       const { full_text, title } = await (await getArticleText(value.trim())).data.article
-            onClick(full_text, title); */
-      onArticleLinkHandler(value.trim())
+      const { full_text, title } = await (await getArticleText(value.trim())).data.article
+      onClick(full_text, title);
+      /* onArticleLinkHandler(value.trim()) */
 
       const { keyterms } = await (await getKeyTermsExtraction(full_text.trim())).data.article
       onKeyTerms(keyterms);
