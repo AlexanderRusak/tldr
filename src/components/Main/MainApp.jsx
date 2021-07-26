@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Loader } from '../UI/Loader/Loader';
 import { TabComponent } from '../TabComponent/TabComponent';
 import { SummarizationComponent } from '../SummarizationComponent/SummarizationComponent';
+import { ResultContent } from '../Result/ResultContent/ResultContent';
 
 export const MainApp = () => {
 
@@ -17,8 +18,19 @@ export const MainApp = () => {
 
 
   const [url, setUrl] = useState('');
-  const [fullText, setFullText] = ('')
+  const [fullText, setFullText] = useState('')
 
+  const urlHandler = (url) => {
+    setUrl(url)
+    console.log(url);
+    setIsLoading(true)
+  }
+
+  const fullTextHandler = (text) => {
+    setFullText(text)
+  }
+
+  ////////////
 
   const postInfo = (text, title) => {
     setData(null);
@@ -26,21 +38,12 @@ export const MainApp = () => {
     dataHandler(text, title)
   }
 
-  const urlHandler = (url) => {
-    console.log(url);
-    setUrl(url)
-  }
-
-  const fullTextHandler = (text) => {
-    setFullText(text)
-  }
-
   const keyTermsDataHandler = (data) => {
     console.log(typeof data, data);
     setKeyTerms(data)
   }
 
-  /* onShortSummary */
+
   const shortSummaryHandler = (data) => {
     setShortSummary(data)
   }
@@ -60,10 +63,11 @@ export const MainApp = () => {
     <>
       <Header />
       <InputItem onClick={postInfo} onArticleLink={urlHandler} onKeyTerms={keyTermsDataHandler} onShortSummary={shortSummaryHandler} onLongSummary={longSummaryHandler} />
-      {isLoading && <Loader />}
-      {url && <ResultContentExpand articleUrl={url} />}
-      {fullText && <ResultContentExpand data={fullText} />}
-      {data && <ResultItem shortData={shortSummary} longData={longSummary} />}
+      {url && <ResultContentExpand articleUrl={url} onText={fullTextHandler} title={'Full text'} />}
+      {fullText && url && <ResultContent data={fullText} title={'Key Terms'} />}
+      {fullText && url && < ResultItem shortData={shortSummary} longData={longSummary} />}
     </>
   )
 }
+
+

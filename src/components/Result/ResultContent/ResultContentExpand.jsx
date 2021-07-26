@@ -6,10 +6,10 @@ import { getArticleText, getKeyTermsExtraction } from '../../../api/axios';
 import { useState, useEffect } from 'react';
 import { Loader } from '../../UI/Loader/Loader';
 
-export const ResultContentExpand = ({ articleUrl, data }) => {
+export const ResultContentExpand = ({ articleUrl, onText, title }) => {
 
   const style = useStyles();
-  const [[content, title], setData] = useState([]);
+  const [content, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false)
 
@@ -26,8 +26,9 @@ export const ResultContentExpand = ({ articleUrl, data }) => {
     setIsError(false)
 
     try {
-      const { full_text: content, title } = await (await getArticleText(url.trim())).data.article;
-      setData([content, title]);
+      const { full_text: content } = await (await getArticleText(url.trim())).data.article;
+      setData(content);
+      onText(content)
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -37,21 +38,7 @@ export const ResultContentExpand = ({ articleUrl, data }) => {
     }
   }
 
-  const getKeyTerms = async (data) => {
-    setData([]);
-    setIsError(false)
 
-    try {
-      const { keyterms } = await (await getKeyTermsExtraction(data.trim())).data.article
-      setData([content, title]);
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-      setData([])
-      setIsError(true)
-      console.error(err);
-    }
-  }
   return (
     <Container>
       {isLoading ?
