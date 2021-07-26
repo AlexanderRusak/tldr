@@ -16,7 +16,8 @@ export const MainApp = () => {
   const [longSummary, setLongSummary] = useState(null);
 
 
-  const [url, setUrl] = useState('')
+  const [url, setUrl] = useState('');
+  const [fullText, setFullText] = ('')
 
 
   const postInfo = (text, title) => {
@@ -28,6 +29,10 @@ export const MainApp = () => {
   const urlHandler = (url) => {
     console.log(url);
     setUrl(url)
+  }
+
+  const fullTextHandler = (text) => {
+    setFullText(text)
   }
 
   const keyTermsDataHandler = (data) => {
@@ -57,7 +62,7 @@ export const MainApp = () => {
       <InputItem onClick={postInfo} onArticleLink={urlHandler} onKeyTerms={keyTermsDataHandler} onShortSummary={shortSummaryHandler} onLongSummary={longSummaryHandler} />
       {isLoading && <Loader />}
       {url && <ResultContentExpand articleUrl={url} />}
-      {data && <ResultContentExpand isExpand={true} title={"Key Terms"} content={keyTerms.join(", ")} />}
+      {fullText && <ResultContentExpand data={fullText} />}
       {data && <ResultItem shortData={shortSummary} longData={longSummary} />}
     </>
   )

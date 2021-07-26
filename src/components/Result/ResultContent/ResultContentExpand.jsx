@@ -2,12 +2,11 @@ import { Accordion, AccordionDetails, AccordionSummary, Container } from '@mater
 import { makeStyles } from '@material-ui/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Text } from '../../UI/Text/Text'
-import { getArticleText } from '../../../api/axios';
-import { API_LINK } from '../../../api/link';
+import { getArticleText, getKeyTermsExtraction } from '../../../api/axios';
 import { useState, useEffect } from 'react';
 import { Loader } from '../../UI/Loader/Loader';
 
-export const ResultContentExpand = ({ articleUrl }) => {
+export const ResultContentExpand = ({ articleUrl, data }) => {
 
   const style = useStyles();
   const [[content, title], setData] = useState([]);
@@ -16,51 +15,62 @@ export const ResultContentExpand = ({ articleUrl }) => {
 
 
   useEffect(() => {
-    getResult()
+    getResult(articleUrl)
     return () => {
       getResult()
     };
-  }, [isLoading, articleUrl]);
+  }, [articleUrl]);
 
-  const getResult = async () => {
+  const getResult = async (url) => {
+    setData([]);
+    setIsError(false)
+
     try {
-      setData([])
-      const { full_text: content, title } = await (await getArticleText(articleUrl.trim())).data.article;
-      console.log(content, title);
+      const { full_text: content, title } = await (await getArticleText(url.trim())).data.article;
       setData([content, title]);
       setIsLoading(false);
-
     } catch (err) {
-      console.log(err, "dddd");
       setIsLoading(false);
       setData([])
-      setIsError(true);
+      setIsError(true)
       console.error(err);
-    } finally {
-      ////
-      setIsLoading(false)
     }
-
   }
 
+  const getKeyTerms = async (data) => {
+    setData([]);
+    setIsError(false)
+
+    try {
+      const { keyterms } = await (await getKeyTermsExtraction(data.trim())).data.article
+      setData([content, title]);
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      setData([])
+      setIsError(true)
+      console.error(err);
+    }
+  }
   return (
     <Container>
-      {isError &&
-        <button onClick={getResult}>Reload</button>}
-      {isLoading && !isError ?
+      {isLoading ?
         <Loader /> :
-        <Accordion className={style.card}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Text title={title} />
-          </AccordionSummary>
-          <AccordionDetails>
-            <Text title={content} />
-          </AccordionDetails>
-        </Accordion>}
+        isError ?
+          <Text title='Error' /> :
+          <Accordion className={style.card}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Text title={title} />
+            </AccordionSummary>
+            <AccordionDetails>
+              <Text title={content} />
+            </AccordionDetails>
+          </Accordion>
+      }
     </Container>
   )
 }
