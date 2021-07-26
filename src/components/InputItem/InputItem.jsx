@@ -8,7 +8,7 @@ import { getArticleText, getKeyTermsExtraction, getSummarization } from '../../a
 
 
 
-export const InputItem = ({ title, onClick, onKeyTerms, onShortSummary, onLongSummary, isLoading }) => {
+export const InputItem = ({ title, onArticleLink, onKeyTerms, onShortSummary, onLongSummary, isLoading }) => {
 
   const styles = useStyles();
   const [value, setValue] = useState("");
@@ -18,18 +18,31 @@ export const InputItem = ({ title, onClick, onKeyTerms, onShortSummary, onLongSu
   }
 
   const resetSummarizeHandler = () => {
-    onClick('', '');
+    /*     onClick('', ''); */
     onKeyTerms([]);
     onShortSummary('');
     onLongSummary('');
   }
 
-  const summarizeHandler = async () => {
+  const onArticleHandler = (value) => {
+
     if (is.url(value)) {
+      console.log(value);
+      onArticleLink(value.trim())
+    } else {
+      alert("Ivalid input");
+      setValue('')
+    }
+
+  }
+
+  const summarizeHandler = () => {
+    onArticleHandler(value)
+    /* if (is.url(value)) {
       resetSummarizeHandler();
-      const { full_text, title } = await (await getArticleText(value.trim())).data.article
-      onClick(full_text, title);
-      /* onArticleLinkHandler(value.trim()) */
+            const { full_text, title } = await (await getArticleText(value.trim())).data.article
+            onClick(full_text, title);
+      onArticleLink(value.trim())
 
       const { keyterms } = await (await getKeyTermsExtraction(full_text.trim())).data.article
       onKeyTerms(keyterms);
@@ -44,7 +57,7 @@ export const InputItem = ({ title, onClick, onKeyTerms, onShortSummary, onLongSu
     } else {
       alert("Ivalid input");
       setValue('')
-    }
+    } */
   }
 
   return (
