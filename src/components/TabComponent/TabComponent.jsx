@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     '& .MuiBox-root': {
       marginTop: 20,
       padding: 0,
-      width: 'calc(100vw - 3rem)'
+      width: '100vw'
     }
   }
 })
