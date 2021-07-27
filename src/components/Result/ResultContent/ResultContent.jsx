@@ -7,8 +7,6 @@ import { Text } from '../../UI/Text/Text'
 
 export const ResultContent = memo(({ data, title }) => {
 
-  console.log(data);
-
   const style = useStyles();
   const [isLoading, setIsLoading] = useState(true);
   const [keyTerms, setKeyTerms] = useState([]);
@@ -24,7 +22,6 @@ export const ResultContent = memo(({ data, title }) => {
   const getKeyTerms = useCallback(async (data) => {
     setKeyTerms([]);
     setIsError(false)
-    console.log(data);
     try {
       const { keyterms } = data && await (await getKeyTermsExtraction(data.trim())).data.article;
       keyterms && setKeyTerms(keyterms.join(', '));
@@ -33,7 +30,6 @@ export const ResultContent = memo(({ data, title }) => {
       setIsLoading(false);
       setKeyTerms([])
       setIsError(true)
-      console.error(err);
     }
   })
 
@@ -60,9 +56,11 @@ const useStyles = makeStyles({
   },
   header: {
     textTransform: 'capitalize',
+    fontSize: '1rem'
   },
   text: {
     textTransform: 'capitalize',
-    textAlign: 'justify'
+    textAlign: 'justify',
+    fontSize: '1rem'
   }
 })

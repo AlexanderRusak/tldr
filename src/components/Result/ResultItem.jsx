@@ -9,7 +9,6 @@ export const ResultItem = memo(({ data, onReady }) => {
   const [long, setIsLong] = useState(null);
 
   useEffect(() => {
-
     shortSummaryummaryHandler(data);
     longSummaryummaryHandler(data);
     return data

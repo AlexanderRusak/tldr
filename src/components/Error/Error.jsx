@@ -8,7 +8,7 @@ export const Error = ({ message }) => {
   const style = useStyles()
 
   return <Container className={style.container}>
-    <Text className={style.text} title={message} variant={'h6'} />
+    <Text className={style.text} title={message} variant={"p"} />
   </Container>
 }
 

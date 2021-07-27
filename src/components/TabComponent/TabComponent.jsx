@@ -1,8 +1,10 @@
 import { AppBar, Container, makeStyles, Tab, Tabs } from '@material-ui/core'
 import { useState } from 'react';
 import { ResultContent } from '../Result/ResultContent/ResultContent';
+import { CardItem } from '../UI/CardItem/CardItem';
 import { Loader } from '../UI/Loader/Loader';
 import { TabPanel } from '../UI/TabPanel/TabPanel'
+import { Text } from '../UI/Text/Text';
 
 export const TabComponent = ({ short, long }) => {
 
@@ -20,14 +22,14 @@ export const TabComponent = ({ short, long }) => {
           <Tab label="Long" />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
+      <TabPanel className={classes.panel} value={value} index={0}>
         {!short ? <Loader /> :
-          <ResultContent title='Short result' title={short} />
+          <CardItem text={short} />
         }
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel className={classes.panel} value={value} index={1}>
         {!long ? <Loader /> :
-          <ResultContent title='Long result' title={long} />
+          <CardItem text={long} />
         }
       </TabPanel>
     </Container>
@@ -40,5 +42,12 @@ const useStyles = makeStyles({
     alignItems: 'center',
     flexDirection: 'column',
     marginTop: '5rem'
+  },
+  panel: {
+    '& .MuiBox-root': {
+      marginTop: 20,
+      padding: 0,
+      width: 'calc(100vw - 3rem)'
+    }
   }
 })
