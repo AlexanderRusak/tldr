@@ -1,12 +1,13 @@
-import { Button, Card, CardContent, CardHeader, Container } from '@material-ui/core'
+import { useState, useEffect, memo, useCallback } from 'react';
+import { Card, CardContent, CardHeader, Container } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles';
-import { useState } from 'react';
-import { useEffect } from 'react';
 import { getKeyTermsExtraction } from '../../../api/axios';
 import { Loader } from '../../UI/Loader/Loader';
 import { Text } from '../../UI/Text/Text'
 
-export const ResultContent = ({ data, title }) => {
+export const ResultContent = memo(({ data, title }) => {
+
+  console.log(data);
 
   const style = useStyles();
   const [isLoading, setIsLoading] = useState(true);
@@ -15,18 +16,18 @@ export const ResultContent = ({ data, title }) => {
 
   useEffect(() => {
     getKeyTerms(data)
-    return () => {
-      getKeyTerms(data)
-    };
+    return data
   }, [data]);
 
 
-  const getKeyTerms = async (data) => {
+
+  const getKeyTerms = useCallback(async (data) => {
     setKeyTerms([]);
     setIsError(false)
+    console.log(data);
     try {
-      const { keyterms } = await (await getKeyTermsExtraction(data.trim())).data.article
-      setKeyTerms(keyterms.join(', '));
+      const { keyterms } = data && await (await getKeyTermsExtraction(data.trim())).data.article;
+      keyterms && setKeyTerms(keyterms.join(', '));
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -34,7 +35,7 @@ export const ResultContent = ({ data, title }) => {
       setIsError(true)
       console.error(err);
     }
-  }
+  })
 
 
   return (
@@ -44,13 +45,12 @@ export const ResultContent = ({ data, title }) => {
         <Card className={style.card}>
           <CardHeader className={style.header} title={title} />
           <CardContent >
-
-            <Text variant='h6' title={keyTerms} className={style.text} />
+            <Text title={keyTerms} className={style.text} />
           </CardContent>
         </Card >}
     </Container>
   )
-}
+})
 
 const useStyles = makeStyles({
   card: {

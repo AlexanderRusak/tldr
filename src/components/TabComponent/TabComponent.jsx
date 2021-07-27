@@ -22,12 +22,12 @@ export const TabComponent = ({ short, long }) => {
       </AppBar>
       <TabPanel value={value} index={0}>
         {!short ? <Loader /> :
-          <ResultContent title='Short result' content={short} />
+          <ResultContent title='Short result' title={short} />
         }
       </TabPanel>
       <TabPanel value={value} index={1}>
         {!long ? <Loader /> :
-          <ResultContent title='Long result' content={long} />
+          <ResultContent title='Long result' title={long} />
         }
       </TabPanel>
     </Container>

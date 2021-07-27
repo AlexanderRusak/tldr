@@ -4,67 +4,38 @@ import { useState } from 'react';
 import { THEME } from '../../theme';
 import { Text } from '../UI/Text/Text';
 import is from "is_js"
-import { getArticleText, getKeyTermsExtraction, getSummarization } from '../../api/axios';
 
-
-
-export const InputItem = ({ title, onArticleLink, onKeyTerms, onShortSummary, onLongSummary, isLoading }) => {
+export const InputItem = ({ onArticleLink, isReady }) => {
 
   const styles = useStyles();
   const [value, setValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const inputFieldHandler = (event) => {
     setValue(event.target.value)
   }
 
-  const resetSummarizeHandler = () => {
-    /*     onClick('', ''); */
-    onKeyTerms([]);
-    onShortSummary('');
-    onLongSummary('');
-  }
-
   const onArticleHandler = (value) => {
-
     if (is.url(value)) {
-      console.log(value);
+      setIsLoading(true)
       onArticleLink(value.trim())
     } else {
       alert("Ivalid input");
-      setValue('')
+      setValue('');
+      console.log(isLoading);
+      setIsLoading(false)
     }
-
   }
 
   const summarizeHandler = () => {
-    onArticleHandler(value)
-    /* if (is.url(value)) {
-      resetSummarizeHandler();
-            const { full_text, title } = await (await getArticleText(value.trim())).data.article
-            onClick(full_text, title);
-      onArticleLink(value.trim())
-
-      const { keyterms } = await (await getKeyTermsExtraction(full_text.trim())).data.article
-      onKeyTerms(keyterms);
-
-      const { short_summary } = await (await getSummarization(full_text)).data.article;
-      onShortSummary(short_summary);
-
-      const { long_summary } = await (await getSummarization(full_text, 'long')).data.article;
-      onLongSummary(long_summary);
-
-
-    } else {
-      alert("Ivalid input");
-      setValue('')
-    } */
+    onArticleHandler(value);
   }
 
   return (
     <Container className={styles.container}>
       <Text
         variant='h6'
-        title={title || 'Enter Article URL'}
+        title={'Enter Article URL'}
         className={styles.text}
       />
       <Input
@@ -76,7 +47,7 @@ export const InputItem = ({ title, onArticleLink, onKeyTerms, onShortSummary, on
         onChange={inputFieldHandler}
         value={value}
       />
-      <Button disabled={isLoading} onClick={summarizeHandler} className={styles.button} size='large' variant='contained' color='primary'>
+      <Button disabled={!isReady && isLoading} onClick={summarizeHandler} className={styles.button} size='large' variant='contained' color='primary'>
         <Text title='Summarize this' />
       </Button>
     </Container>

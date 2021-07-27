@@ -1,29 +1,25 @@
+import { useState, useEffect, memo } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Container } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Text } from '../../UI/Text/Text'
-import { getArticleText, getKeyTermsExtraction } from '../../../api/axios';
-import { useState, useEffect } from 'react';
+import { getArticleText } from '../../../api/axios';
 import { Loader } from '../../UI/Loader/Loader';
 
-export const ResultContentExpand = ({ articleUrl, onText, title }) => {
+export const ResultContentExpand = memo(({ articleUrl, onText, title, onError }) => {
 
   const style = useStyles();
   const [content, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false)
-
 
   useEffect(() => {
     getResult(articleUrl)
-    return () => {
-      getResult()
-    };
+    return articleUrl
   }, [articleUrl]);
 
   const getResult = async (url) => {
     setData([]);
-    setIsError(false)
+    onError(false)
 
     try {
       const { full_text: content } = await (await getArticleText(url.trim())).data.article;
@@ -33,7 +29,7 @@ export const ResultContentExpand = ({ articleUrl, onText, title }) => {
     } catch (err) {
       setIsLoading(false);
       setData([])
-      setIsError(true)
+      onError(true)
       console.error(err);
     }
   }
@@ -43,24 +39,22 @@ export const ResultContentExpand = ({ articleUrl, onText, title }) => {
     <Container>
       {isLoading ?
         <Loader /> :
-        isError ?
-          <Text title='Error' /> :
-          <Accordion className={style.card}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Text title={title} />
-            </AccordionSummary>
-            <AccordionDetails>
-              <Text title={content} />
-            </AccordionDetails>
-          </Accordion>
+        <Accordion className={style.card}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Text title={title} />
+          </AccordionSummary>
+          <AccordionDetails>
+            <Text title={content} />
+          </AccordionDetails>
+        </Accordion>
       }
     </Container>
   )
-}
+})
 
 const useStyles = makeStyles({
   card: {
